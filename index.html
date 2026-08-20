@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MLC Graduate Voter Registration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0e2a43; --ink-2:#123c5e; --saffron:#e8862c; --saffron-d:#b5651a;
+    --paper:#f5f7fa; --card:#ffffff; --line:#dde4ec; --text:#233242;
+    --muted:#64748b; --ok:#1d7a4f; --err:#c0392b; --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  ::selection{background:#fbe3cc}
+  body{font-family:'Inter',system-ui,sans-serif;color:var(--text);line-height:1.6;
+    background:linear-gradient(180deg,#eef2f7 0%,var(--paper) 240px)}
+
+  .hero{background:var(--ink);color:#fff;padding:34px 20px 40px;position:relative;overflow:hidden}
+  .hero-wm{position:absolute;right:-70px;top:50%;transform:translateY(-50%);width:430px;
+    opacity:.055;pointer-events:none}
+  @media(max-width:760px){.hero-wm{width:320px;right:-90px}}
+  @media(max-width:560px){.hero-wm{display:none}}
+  .brand-mark{width:44px;height:44px;border-radius:11px;background:var(--saffron);
+    display:grid;place-items:center;box-shadow:0 3px 10px rgba(0,0,0,.3)}
+  .brand-mark svg{width:30px;height:30px}
+  .hero-inner{max-width:820px;margin:0 auto;position:relative;display:flex;
+    align-items:flex-end;gap:36px;justify-content:space-between;z-index:1}
+  .hero-text{flex:1;min-width:0}
+  .hero-art{flex:0 0 auto;width:180px;margin-bottom:0;
+    filter:drop-shadow(0 10px 24px rgba(0,0,0,.28))}
+  @media(max-width:760px){.hero-art{width:145px}}
+  @media(max-width:560px){
+    .hero-inner{flex-direction:column;align-items:center;gap:10px;text-align:center}
+    .hero-text{width:100%}
+    .hero-text .brand{justify-content:center}
+    .hero-text .rule{margin:14px auto 0}
+    .hero-art{width:132px;margin:4px 0 0}
+  }
+  .brand{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+  .brand-name{font-family:'Sora';font-weight:600;font-size:15px;letter-spacing:.4px;text-transform:uppercase;opacity:.92}
+  .hero h1{font-family:'Sora';font-weight:700;font-size:clamp(24px,4.5vw,34px);line-height:1.25;max-width:640px}
+  .hero p{margin-top:10px;font-size:15px;opacity:.85;max-width:620px}
+  .hero .rule{width:64px;height:4px;background:var(--saffron);border-radius:2px;margin:18px 0 0}
+  .hero-strip{height:5px;background:linear-gradient(90deg,var(--saffron) 0 34%,#1d7a4f 34% 67%,var(--ink-2) 67% 100%)}
+
+  .wrap{max-width:820px;margin:26px auto 60px;padding:0 20px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:0 10px 30px rgba(14,42,67,.08);padding:30px 28px;margin-bottom:22px}
+  .card h2{font-family:'Sora';font-weight:600;font-size:17px;color:var(--ink);
+    display:flex;align-items:center;gap:10px;margin-bottom:6px;padding-bottom:12px;
+    border-bottom:1px solid var(--line);position:relative}
+  .card h2::after{content:"";position:absolute;left:0;bottom:-1px;width:52px;height:2.5px;
+    background:var(--saffron);border-radius:2px}
+  .step-chip{min-width:27px;height:27px;border-radius:8px;
+    background:linear-gradient(135deg,var(--ink-2),var(--ink));color:#fff;
+    display:grid;place-items:center;font-size:13px;font-weight:600;
+    box-shadow:0 2px 6px rgba(14,42,67,.25)}
+  .card .hint{font-size:13.5px;color:var(--muted);margin:10px 0 20px}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:640px){.grid{grid-template-columns:1fr}}
+  .field{display:flex;flex-direction:column;gap:6px}
+  .field.full{grid-column:1/-1}
+  label{font-size:12.5px;font-weight:600;color:var(--ink-2);letter-spacing:.2px}
+  label .req{color:var(--err)}
+  input[type=text],input[type=tel],input[type=number],input[type=date],select,textarea{
+    font:inherit;font-size:16px;padding:12px 14px;border:1.5px solid var(--line);
+    border-radius:10px;background:#fff;color:var(--text);width:100%;
+    transition:border-color .15s, box-shadow .15s}
+  select{appearance:none;-webkit-appearance:none;
+    background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' stroke='%2364748b' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 14px center;padding-right:38px}
+  textarea{min-height:86px;resize:vertical}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--saffron);
+    box-shadow:0 0 0 3.5px rgba(232,134,44,.16)}
+  input:hover:not(:focus),select:hover:not(:focus){border-color:#c3cfdc}
+  .fe{font-size:12.5px;color:var(--err);display:none}
+  .field.bad input,.field.bad select,.field.bad textarea{border-color:var(--err)}
+  .field.bad .fe{display:block}
+  .field.bad .up{border-color:var(--err)}
+
+  .up{border:1.6px dashed var(--line);border-radius:12px;padding:16px;text-align:center;
+    transition:border-color .15s, box-shadow .15s;background:#fbfcfe}
+  .up:hover{border-color:var(--saffron);box-shadow:0 4px 14px rgba(232,134,44,.10)}
+  .up.done{border-style:solid;border-color:var(--ok);background:#f2faf6}
+  .up .ico{font-size:24px}
+  .up .t{font-size:14px;font-weight:600;color:var(--ink-2);margin-top:4px}
+  .up .s{font-size:12px;color:var(--muted)}
+  .up .fname{font-size:12.5px;color:var(--ok);font-weight:600;word-break:break-all;margin-top:4px;display:none}
+  .up.done .fname{display:block}
+  .up .thumb{display:none;max-width:110px;max-height:110px;border-radius:8px;margin:8px auto 0;
+    border:1px solid var(--line)}
+  .up.done .thumb.show{display:block}
+  .up .acts{display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+  .up .abtn{font:inherit;font-size:13px;font-weight:600;padding:8px 15px;border-radius:8px;
+    border:1.5px solid var(--ink-2);background:#fff;color:var(--ink-2);cursor:pointer;transition:all .15s}
+  .up .abtn:hover{background:var(--ink-2);color:#fff;transform:translateY(-1px)}
+  .up input{display:none}
+  .uperr{font-size:12.5px;color:var(--err);font-weight:600;margin-top:6px;display:none}
+
+  .rail{display:flex;gap:10px;margin-bottom:22px;flex-wrap:wrap;background:var(--card);
+    border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;
+    box-shadow:0 4px 14px rgba(14,42,67,.06)}
+  .rail .lbl{width:100%;font-size:11.5px;font-weight:600;letter-spacing:.6px;
+    text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+  .rail .pill{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;
+    border:1px solid var(--line);border-radius:999px;padding:6px 13px;color:var(--muted);
+    background:#fff;transition:all .2s}
+  .rail .pill.on{border-color:var(--ok);color:var(--ok);background:#f2faf6}
+  .rail .dot{width:8px;height:8px;border-radius:50%;background:var(--line);flex:0 0 auto;transition:all .2s}
+  .rail .pill.on .dot{display:none}
+  .rail .pill.on::before{content:"✓";font-weight:700;color:var(--ok)}
+
+  .dec{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--text)}
+  .dec input{margin-top:4px;accent-color:var(--saffron);width:17px;height:17px}
+  .btn{font-family:'Sora';font-weight:600;font-size:16px;color:#fff;
+    background:linear-gradient(135deg,#f09a44,var(--saffron) 55%,var(--saffron-d));
+    border:none;border-radius:12px;padding:15px 26px;width:100%;cursor:pointer;margin-top:20px;
+    transition:transform .15s, box-shadow .15s, filter .15s;letter-spacing:.2px;
+    box-shadow:0 6px 18px rgba(232,134,44,.35)}
+  .btn:hover:not(:disabled){transform:translateY(-1.5px);box-shadow:0 9px 24px rgba(232,134,44,.42);filter:brightness(1.04)}
+  .btn:active:not(:disabled){transform:translateY(0)}
+  .btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none;background:linear-gradient(135deg,#9aa8b6,#7f8f9f)}
+  .note{font-size:12.5px;color:var(--muted);text-align:center;margin-top:12px}
+  .alert{display:none;border-radius:10px;padding:12px 15px;font-size:14px;margin-top:16px}
+  .alert.err{display:block;background:#fdecea;color:var(--err);border:1px solid #f5c6c0}
+
+  .success{display:none;text-align:center;padding:50px 24px}
+  .success .badge{width:74px;height:74px;border-radius:50%;background:#f2faf6;border:2px solid var(--ok);
+    display:grid;place-items:center;font-size:34px;margin:0 auto 18px;color:var(--ok)}
+  .success h2{font-family:'Sora';color:var(--ink);font-size:22px;justify-content:center}
+  .success p{color:var(--muted);font-size:14.5px;margin-top:8px}
+
+  .spin{display:inline-block;width:16px;height:16px;border:2.5px solid rgba(255,255,255,.4);
+    border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:-3px;margin-right:8px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion: reduce){.spin{animation:none}}
+
+  /* ---------- mobile fine-tuning ---------- */
+  @media(max-width:640px){
+    .hero{padding:24px 16px 26px}
+    .hero p{font-size:13.5px}
+    .hero h1{font-size:23px}
+    .brand{margin-bottom:14px}
+    .brand-mark{width:38px;height:38px;border-radius:9px}
+    .brand-mark svg{width:26px;height:26px}
+    .brand-name{font-size:12.5px}
+    .wrap{padding:0 12px;margin-top:18px}
+    .card{padding:20px 16px;border-radius:12px}
+    .card h2{font-size:16px}
+    .rail{gap:7px;padding:12px 13px;border-radius:12px}
+    .rail .pill{font-size:11px;padding:5px 10px}
+    .rail .lbl{font-size:10.5px}
+    .up .acts{flex-direction:column}
+    .up .abtn{width:100%;padding:12px}
+    .btn{padding:16px;font-size:15.5px}
+    .grid{gap:13px}
+  }
+  @media(max-width:380px){
+    .hero h1{font-size:21px}
+    .hero-art{width:116px}
+  }
+
+  /* ---------- rules button (right side) ---------- */
+  .rules-btn{position:fixed;right:0;top:42%;z-index:60;background:var(--ink);color:#fff;
+    border:none;cursor:pointer;font-family:'Sora';font-weight:600;font-size:13px;letter-spacing:1px;
+    writing-mode:vertical-rl;padding:16px 11px;border-radius:10px 0 0 10px;
+    box-shadow:-4px 4px 14px rgba(14,42,67,.25);transition:.15s}
+  .rules-btn:hover{background:var(--saffron)}
+  .overlay{position:fixed;inset:0;background:rgba(14,42,67,.5);z-index:70;display:none}
+  .overlay.open{display:block}
+  .rules-panel{position:fixed;top:0;right:-420px;width:min(400px,92vw);height:100vh;background:#fff;
+    z-index:80;box-shadow:-12px 0 34px rgba(14,42,67,.25);transition:right .28s ease;
+    display:flex;flex-direction:column}
+  .rules-panel.open{right:0}
+  .rp-head{background:var(--ink);color:#fff;padding:20px 22px;display:flex;
+    align-items:center;justify-content:space-between}
+  .rp-head h3{font-family:'Sora';font-weight:600;font-size:17px}
+  .rp-close{background:rgba(255,255,255,.14);border:none;color:#fff;width:34px;height:34px;
+    border-radius:8px;font-size:17px;cursor:pointer}
+  .rp-close:hover{background:var(--saffron)}
+  .rp-body{padding:20px 22px;overflow-y:auto;flex:1}
+  .rules-panel .rule{display:flex;gap:13px;padding:13px 0;border-bottom:1px solid var(--line)}
+  .rules-panel .rule:last-child{border-bottom:none}
+  .rules-panel .rule .no{min-width:28px;height:28px;border-radius:8px;background:#fdf1e5;color:var(--saffron-d);
+    display:grid;place-items:center;font-family:'Sora';font-weight:700;font-size:13px}
+  .rules-panel .rule p{font-size:13.5px;line-height:1.55;color:var(--text)}
+  .rules-panel .rule p b{color:var(--ink-2)}
+  .rp-foot{padding:14px 22px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);background:#fbfcfe}
+  @media(max-width:640px){
+    .rules-btn{writing-mode:horizontal-tb;top:auto;bottom:18px;right:14px;border-radius:999px;
+      padding:12px 20px;letter-spacing:.4px;box-shadow:0 6px 18px rgba(14,42,67,.3)}
+  }
+
+  /* ---------- footer ---------- */
+  .foot{max-width:820px;margin:0 auto 30px;padding:0 20px;text-align:center;
+    font-size:12.5px;color:var(--muted)}
+  .foot .sep{margin:0 8px;color:var(--line)}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <!-- big faded emblem watermark (portal style) -->
+  <svg class="hero-wm" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <circle cx="100" cy="100" r="92" fill="none" stroke="#fff" stroke-width="5"/>
+    <circle cx="100" cy="100" r="74" fill="none" stroke="#fff" stroke-width="2.5"/>
+    <path d="M100 40 l9 22 24 2 -18 16 5 23 -20 -12 -20 12 5 -23 -18 -16 24 -2 z" fill="#fff"/>
+    <path d="M62 132 q0 26 38 30 q38 -4 38 -30 l0 -14 -12 0 0 12 q0 16 -26 20 q-26 -4 -26 -20 l0 -12 -12 0 z" fill="#fff"/>
+    <path d="M84 118 l11 11 22 -24" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="brand">
+        <div class="brand-mark" id="brandMark">
+          <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="20" cy="20" r="17.5" fill="none" stroke="#fff" stroke-width="2.2"/>
+            <path d="M20 8.5 l2.4 5.7 6.2 .5 -4.7 4.1 1.4 6 -5.3 -3.2 -5.3 3.2 1.4 -6 -4.7 -4.1 6.2 -.5 z" fill="#fff"/>
+            <path d="M13 27.5 l4 4 10 -11" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="brand-name" id="brandName">Graduate Constituency</div>
+      </div>
+      <h1>MLC Graduate Voter Registration</h1>
+      <p>Register as a graduate voter. Keep your address proof, graduation proof (completed on or before 2022) and one passport-size photograph ready. Only PDF, JPG and PNG files are accepted — every file is checked before submission. Read the <b style="color:#f2a75e">Rules</b> from the button on the right before you begin.</p>
+      <div class="rule"></div>
+    </div>
+    <svg class="hero-art" viewBox="0 0 230 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <ellipse cx="115" cy="224" rx="90" ry="11" fill="rgba(0,0,0,.25)"/>
+      <!-- ballot box -->
+      <rect x="32" y="132" width="166" height="90" rx="12" fill="#e8862c"/>
+      <rect x="32" y="132" width="166" height="23" rx="11.5" fill="#f2a75e"/>
+      <rect x="84" y="139" width="62" height="9" rx="4.5" fill="#0e2a43"/>
+      <circle cx="115" cy="188" r="21" fill="rgba(255,255,255,.16)"/>
+      <path d="M106 188 l6.5 6.5 12-13" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- ballot dropping in -->
+      <g transform="rotate(-9 115 76)">
+        <rect x="84" y="42" width="62" height="78" rx="7" fill="#ffffff"/>
+        <rect x="93" y="56" width="44" height="6" rx="3" fill="#c9d4e0"/>
+        <rect x="93" y="69" width="44" height="6" rx="3" fill="#c9d4e0"/>
+        <rect x="93" y="82" width="28" height="6" rx="3" fill="#c9d4e0"/>
+        <circle cx="126" cy="102" r="10.5" fill="#1d7a4f"/>
+        <path d="M120.8 102 l3.8 3.8 7-8" stroke="#fff" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+      <!-- motion lines -->
+      <line x1="70" y1="58" x2="70" y2="74" stroke="rgba(255,255,255,.4)" stroke-width="3" stroke-linecap="round"/>
+      <line x1="60" y1="82" x2="60" y2="93" stroke="rgba(255,255,255,.25)" stroke-width="3" stroke-linecap="round"/>
+      <!-- graduation cap -->
+      <g transform="translate(184 30) rotate(12)">
+        <rect x="-22" y="9" width="44" height="8" rx="4" fill="#0e2a43" stroke="#f2a75e" stroke-width="1.4"/>
+        <path d="M-26 11 L0 -1 L26 11 L0 23 Z" fill="#123c5e" stroke="#f2a75e" stroke-width="1.4"/>
+        <line x1="19" y1="16" x2="23" y2="34" stroke="#f2a75e" stroke-width="2.2" stroke-linecap="round"/>
+        <circle cx="23" cy="37" r="3.4" fill="#f2a75e"/>
+      </g>
+    </svg>
+  </div>
+</header>
+<div class="hero-strip"></div>
+
+<main class="wrap">
+  <form id="regForm" novalidate>
+
+    <div class="rail" id="rail">
+      <span class="lbl">Your progress</span>
+      <span class="pill" data-k="p1"><span class="dot"></span>Personal details</span>
+      <span class="pill" data-k="p2"><span class="dot"></span>Address proof</span>
+      <span class="pill" data-k="p3"><span class="dot"></span>Graduation proof</span>
+      <span class="pill" data-k="p4"><span class="dot"></span>Photograph</span>
+    </div>
+
+    <!-- STEP 1 -->
+    <section class="card">
+      <h2><span class="step-chip">1</span>Personal details</h2>
+      <p class="hint">Fill your details exactly as they appear on your Aadhaar card.</p>
+      <div class="grid">
+        <div class="field">
+          <label>Full name <span class="req">*</span></label>
+          <input type="text" id="name" placeholder="e.g. Rahul Sharma" autocomplete="name">
+          <span class="fe">Enter your full name.</span>
+        </div>
+        <div class="field">
+          <label>Father's name <span class="req">*</span></label>
+          <input type="text" id="father" placeholder="Father's full name">
+          <span class="fe">Enter your father's name.</span>
+        </div>
+        <div class="field">
+          <label>Date of birth <span class="req">*</span></label>
+          <input type="date" id="dob">
+          <span class="fe">Enter a valid date of birth (age 18+).</span>
+        </div>
+        <div class="field">
+          <label>Gender <span class="req">*</span></label>
+          <select id="gender">
+            <option value="">Select gender</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+          </select>
+          <span class="fe">Select your gender.</span>
+        </div>
+        <div class="field">
+          <label>Mobile number <span class="req">*</span></label>
+          <input type="tel" id="mobile" maxlength="10" inputmode="numeric" placeholder="10-digit number">
+          <span class="fe">Enter a valid 10-digit mobile number (starts with 6–9).</span>
+        </div>
+        <div class="field">
+          <label>Aadhaar number <span class="req">*</span></label>
+          <input type="tel" id="aadhaar" maxlength="12" inputmode="numeric" placeholder="12-digit Aadhaar number">
+          <span class="fe">Enter a valid 12-digit Aadhaar number.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 1B : ADDRESS -->
+    <section class="card">
+      <h2><span class="step-chip">🏠</span>Address</h2>
+      <p class="hint">Fill your current residential address.</p>
+      <div class="grid">
+        <div class="field full">
+          <label>House no. / Street <span class="req">*</span></label>
+          <input type="text" id="house" placeholder="House no., street / locality">
+          <span class="fe">Enter house no. and street.</span>
+        </div>
+        <div class="field">
+          <label>City / Town / Village <span class="req">*</span></label>
+          <input type="text" id="city" placeholder="e.g. Aligarh">
+          <span class="fe">Enter your city.</span>
+        </div>
+        <div class="field">
+          <label>District / Constituency <span class="req">*</span></label>
+          <select id="district">
+            <option value="">Select district</option>
+          </select>
+          <span class="fe">Select your district.</span>
+        </div>
+        <div class="field">
+          <label>State <span class="req">*</span></label>
+          <select id="state">
+            <option value="">Select state</option>
+          </select>
+          <span class="fe">Select your state.</span>
+        </div>
+        <div class="field">
+          <label>PIN code <span class="req">*</span></label>
+          <input type="tel" id="pin" maxlength="6" inputmode="numeric" placeholder="6-digit PIN">
+          <span class="fe">Enter a valid 6-digit PIN code.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 2 -->
+    <section class="card">
+      <h2><span class="step-chip">2</span>Address proof</h2>
+      <p class="hint">Aadhaar card, electricity bill, telephone bill, rent agreement or any other valid address proof.</p>
+      <div class="grid">
+        <div class="field">
+          <label>Document type <span class="req">*</span></label>
+          <select id="addrType">
+            <option value="">Select document</option>
+            <option>Aadhaar Card</option>
+            <option>Electricity Bill</option>
+            <option>Telephone Bill</option>
+            <option>Rent Agreement</option>
+            <option>Other valid address proof</option>
+          </select>
+          <span class="fe">Select the document type.</span>
+        </div>
+        <div class="field">
+          <label>Upload document <span class="req">*</span></label>
+          <div class="up" id="upAddr">
+            <div class="ico">📄</div>
+            <div class="t">Address proof</div>
+            <div class="s">PDF, JPG or PNG · max 10 MB</div>
+            <img class="thumb" alt="">
+            <div class="fname"></div>
+            <div class="acts">
+              <button type="button" class="abtn pick">Choose file</button>
+              <button type="button" class="abtn cam">📷 Take photo</button>
+            </div>
+            <div class="uperr"></div>
+            <input type="file" class="fpick" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png">
+            <input type="file" class="fcam" accept="image/*" capture="environment">
+          </div>
+          <span class="fe">Address proof upload is mandatory.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 3 -->
+    <section class="card">
+      <h2><span class="step-chip">3</span>Graduation proof</h2>
+      <p class="hint">Eligible only if graduation was completed on or before 2022. Final year marksheet, degree or provisional degree accepted.</p>
+      <div class="grid">
+        <div class="field">
+          <label>Year of completion <span class="req">*</span></label>
+          <input type="number" id="gradYear" min="1950" max="2022" placeholder="e.g. 2019">
+          <span class="fe">Must be between 1950 and 2022.</span>
+        </div>
+        <div class="field">
+          <label>Document type <span class="req">*</span></label>
+          <select id="gradType">
+            <option value="">Select document</option>
+            <option>Final Year Marksheet</option>
+            <option>Graduation Degree</option>
+            <option>Provisional Degree</option>
+            <option>Other valid proof of graduation</option>
+          </select>
+          <span class="fe">Select the document type.</span>
+        </div>
+        <div class="field">
+          <label>Degree / course <span class="req">*</span></label>
+          <input type="text" id="degree" placeholder="e.g. B.A., B.Sc., B.Tech">
+          <span class="fe">Enter your degree.</span>
+        </div>
+        <div class="field">
+          <label>University / college <span class="req">*</span></label>
+          <input type="text" id="university" placeholder="University name">
+          <span class="fe">Enter your university or college.</span>
+        </div>
+        <div class="field full">
+          <label>Upload document <span class="req">*</span></label>
+          <div class="up" id="upGrad">
+            <div class="ico">🎓</div>
+            <div class="t">Graduation proof</div>
+            <div class="s">PDF, JPG or PNG · max 10 MB</div>
+            <img class="thumb" alt="">
+            <div class="fname"></div>
+            <div class="acts">
+              <button type="button" class="abtn pick">Choose file</button>
+              <button type="button" class="abtn cam">📷 Take photo</button>
+            </div>
+            <div class="uperr"></div>
+            <input type="file" class="fpick" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png">
+            <input type="file" class="fcam" accept="image/*" capture="environment">
+          </div>
+          <span class="fe">Graduation proof upload is mandatory.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 4 -->
+    <section class="card">
+      <h2><span class="step-chip">4</span>Photograph &amp; declaration</h2>
+      <p class="hint">One recent passport-size photograph with a plain background. Images only.</p>
+      <div class="grid">
+        <div class="field full">
+          <label>Upload photograph <span class="req">*</span></label>
+          <div class="up" id="upPhoto">
+            <div class="ico">🖼️</div>
+            <div class="t">Passport-size photo</div>
+            <div class="s">JPG or PNG only · max 10 MB</div>
+            <img class="thumb" alt="">
+            <div class="fname"></div>
+            <div class="acts">
+              <button type="button" class="abtn pick">Choose file</button>
+              <button type="button" class="abtn cam">📷 Take photo</button>
+            </div>
+            <div class="uperr"></div>
+            <input type="file" class="fpick" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
+            <input type="file" class="fcam" accept="image/*" capture="user">
+          </div>
+          <span class="fe">Photograph upload is mandatory.</span>
+        </div>
+        <div class="field full">
+          <label class="dec">
+            <input type="checkbox" id="declare">
+            <span>I confirm that the documents uploaded are clear, valid and belong to me, and the details provided are true to the best of my knowledge. <span class="req">*</span></span>
+          </label>
+          <span class="fe">Please accept the declaration.</span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn" id="btnSubmit" disabled>Complete all steps to submit</button>
+      <div class="alert err" id="serverErr"></div>
+      <p class="note">Your documents are checked automatically and stored securely — used only for voter registration.</p>
+    </section>
+  </form>
+
+  <div class="card success" id="successCard">
+    <div class="badge">✓</div>
+    <h2>Registration submitted</h2>
+    <p style="margin-top:14px;font-size:15px;color:var(--ink-2)">Your reference number:</p>
+    <p style="font-family:'Sora';font-weight:700;font-size:26px;color:var(--saffron-d);
+       letter-spacing:1px;margin-top:4px" id="refNo">—</p>
+    <p style="margin-top:14px">Please note this number for future reference.<br>
+       Thank you. Your details and documents have been received.<br>
+       We will contact you on your mobile number if anything else is needed.</p>
+  </div>
+</main>
+
+<footer class="foot">
+  Documents are stored securely and used only for voter registration
+  <span class="sep">•</span> For help, contact the registration coordinator
+</footer>
+
+<!-- ---------- RULES ---------- -->
+<button type="button" class="rules-btn" id="rulesBtn">📋 RULES</button>
+<div class="overlay" id="rulesOverlay"></div>
+<aside class="rules-panel" id="rulesPanel" aria-label="Registration rules">
+  <div class="rp-head">
+    <h3>📋 Registration Rules</h3>
+    <button type="button" class="rp-close" id="rulesClose" aria-label="Close">✕</button>
+  </div>
+  <div class="rp-body">
+    <div class="rule"><span class="no">1</span><p><b>Graduate eligibility:</b> You must have completed graduation (or an equivalent qualification) from a recognised university <b>on or before 2022</b>.</p></div>
+    <div class="rule"><span class="no">2</span><p><b>Residence:</b> You should be an ordinary resident of the constituency. Fill your full current address correctly with PIN code.</p></div>
+    <div class="rule"><span class="no">3</span><p><b>Address proof (mandatory):</b> Aadhaar card, electricity bill, telephone bill, rent agreement or any other valid address proof — clear copy only.</p></div>
+    <div class="rule"><span class="no">4</span><p><b>Graduation proof (mandatory):</b> Final year marksheet, degree certificate or provisional degree. The document must clearly show your name and year of passing.</p></div>
+    <div class="rule"><span class="no">5</span><p><b>Photograph (mandatory):</b> One recent passport-size photo with a plain background. Selfies with filters or group photos are not accepted.</p></div>
+    <div class="rule"><span class="no">6</span><p><b>File rules:</b> Only PDF, JPG or PNG files up to 10 MB. Every file is automatically checked — invalid or duplicate files are rejected.</p></div>
+    <div class="rule"><span class="no">7</span><p><b>One registration per person:</b> Submit only once. Duplicate or false submissions may lead to rejection of your application.</p></div>
+    <div class="rule"><span class="no">8</span><p><b>Correct details:</b> Name and details must match your Aadhaar. Wrong or unclear documents will require re-submission.</p></div>
+    <div class="rule"><span class="no">9</span><p><b>Declaration:</b> By submitting, you confirm that all documents belong to you and the information given is true.</p></div>
+  </div>
+  <div class="rp-foot">Keep all three documents ready before starting. The form can be submitted only when every step is complete.</div>
+</aside>
+
+<script>
+  (function(){
+    var btn = document.getElementById('rulesBtn'),
+        panel = document.getElementById('rulesPanel'),
+        ov = document.getElementById('rulesOverlay'),
+        close = document.getElementById('rulesClose');
+    function open(){ panel.classList.add('open'); ov.classList.add('open'); }
+    function shut(){ panel.classList.remove('open'); ov.classList.remove('open'); }
+    btn.addEventListener('click', open);
+    close.addEventListener('click', shut);
+    ov.addEventListener('click', shut);
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape') shut(); });
+  })();
+</script>
+
+<script>
+  var files = { addr:null, grad:null, photo:null };
+  var MAXB = 10*1024*1024, MINB = 15*1024;
+
+  // header emblem/text is set directly in the HTML above — edit there if needed
+
+  /* ---- real file-type check from first bytes (extension can lie) ---- */
+  function sniff(buf){
+    var b = new Uint8Array(buf.slice(0,8));
+    if (b[0]===0x25 && b[1]===0x50 && b[2]===0x44 && b[3]===0x46) return 'pdf';
+    if (b[0]===0xFF && b[1]===0xD8 && b[2]===0xFF)                return 'jpg';
+    if (b[0]===0x89 && b[1]===0x50 && b[2]===0x4E && b[3]===0x47) return 'png';
+    return null;
+  }
+
+  function upErr(box, msg){
+    var e = box.querySelector('.uperr');
+    e.textContent = msg; e.style.display = msg ? 'block' : 'none';
+    if (msg){ box.classList.remove('done'); }
+  }
+
+  function bindUpload(boxId, key, allowed, isPhoto){
+    var box = document.getElementById(boxId);
+    var pick = box.querySelector('.fpick'), cam = box.querySelector('.fcam');
+    box.querySelector('.abtn.pick').addEventListener('click', function(){ pick.click(); });
+    box.querySelector('.abtn.cam').addEventListener('click',  function(){ cam.click();  });
+
+    function handle(input){
+      var f = input.files[0];
+      if (!f) return;
+      upErr(box, '');
+      if (f.size > MAXB){ upErr(box,'File is larger than 10 MB. Upload a smaller file.'); input.value=''; return; }
+      if (f.size < MINB){ upErr(box,'File is too small or blank. Upload a clear copy.'); input.value=''; return; }
+
+      var r = new FileReader();
+      r.onload = function(e){
+        var kind = sniff(e.target.result);
+        if (!kind || allowed.indexOf(kind) === -1){
+          upErr(box, isPhoto
+            ? 'Only a JPG/PNG photo is accepted here. This file is not a valid image.'
+            : 'Only PDF, JPG or PNG documents are accepted. This file is not valid.');
+          input.value=''; files[key]=null; updateAll(); return;
+        }
+        // duplicate check — same file cannot be used twice
+        var b64 = arrayToB64(e.target.result);
+        for (var k in files){
+          if (k !== key && files[k] && files[k].data === b64){
+            upErr(box, 'This file is already attached in another section. Each document must be different.');
+            input.value=''; files[key]=null; updateAll(); return;
+          }
+        }
+
+        function accept(){
+          files[key] = { name: f.name, type: f.type || (kind==='pdf'?'application/pdf':'image/'+ (kind==='png'?'png':'jpeg')), data: b64 };
+          box.classList.add('done');
+          box.querySelector('.fname').textContent = '✓ ' + (f.name || 'camera-photo.jpg');
+          var th = box.querySelector('.thumb');
+          if (kind !== 'pdf'){ th.src = 'data:' + files[key].type + ';base64,' + b64; th.classList.add('show'); }
+          else { th.classList.remove('show'); }
+          clearBad(box.closest('.field'));
+          updateAll();
+        }
+
+        if (isPhoto){
+          // photo quality gate: must load as an image and be at least 200×200
+          var img = new Image();
+          img.onload = function(){
+            if (img.width < 200 || img.height < 200){
+              upErr(box,'Photo is too small/blurry (minimum 200×200 pixels). Upload a clearer photo.');
+              input.value=''; files[key]=null; updateAll(); return;
+            }
+            accept();
+          };
+          img.onerror = function(){ upErr(box,'This image cannot be read. Upload a valid photo.'); input.value=''; };
+          img.src = 'data:image/*;base64,' + b64;
+        } else accept();
+      };
+      r.readAsArrayBuffer(f);
+    }
+    pick.addEventListener('change', function(){ handle(pick); });
+    cam.addEventListener('change',  function(){ handle(cam);  });
+  }
+
+  function arrayToB64(buf){
+    var bytes = new Uint8Array(buf), bin = '', CH = 0x8000;
+    for (var i = 0; i < bytes.length; i += CH)
+      bin += String.fromCharCode.apply(null, bytes.subarray(i, i + CH));
+    return btoa(bin);
+  }
+
+  bindUpload('upAddr','addr',['pdf','jpg','png'], false);
+  bindUpload('upGrad','grad',['pdf','jpg','png'], false);
+  bindUpload('upPhoto','photo',['jpg','png'], true);
+
+  /* ---- state-wise districts: district list changes with selected state ---- */
+  var DISTRICTS = {
+    'Uttar Pradesh':['Agra','Aligarh','Ambedkar Nagar','Amethi','Amroha','Auraiya','Ayodhya','Azamgarh','Baghpat','Bahraich','Ballia','Balrampur','Banda','Barabanki','Bareilly','Basti','Bhadohi','Bijnor','Budaun','Bulandshahr','Chandauli','Chitrakoot','Deoria','Etah','Etawah','Farrukhabad','Fatehpur','Firozabad','Gautam Buddha Nagar','Ghaziabad','Ghazipur','Gonda','Gorakhpur','Hamirpur','Hapur','Hardoi','Hathras','Jalaun','Jaunpur','Jhansi','Kannauj','Kanpur Dehat','Kanpur Nagar','Kasganj','Kaushambi','Kheri','Kushinagar','Lalitpur','Lucknow','Maharajganj','Mahoba','Mainpuri','Mathura','Mau','Meerut','Mirzapur','Moradabad','Muzaffarnagar','Pilibhit','Pratapgarh','Prayagraj','Raebareli','Rampur','Saharanpur','Sambhal','Sant Kabir Nagar','Shahjahanpur','Shamli','Shravasti','Siddharthnagar','Sitapur','Sonbhadra','Sultanpur','Unnao','Varanasi'],
+    'Uttarakhand':['Almora','Bageshwar','Chamoli','Champawat','Dehradun','Haridwar','Nainital','Pauri Garhwal','Pithoragarh','Rudraprayag','Tehri Garhwal','Udham Singh Nagar','Uttarkashi'],
+    'Delhi':['Central Delhi','East Delhi','New Delhi','North Delhi','North East Delhi','North West Delhi','Shahdara','South Delhi','South East Delhi','South West Delhi','West Delhi'],
+    'Haryana':['Ambala','Bhiwani','Charkhi Dadri','Faridabad','Fatehabad','Gurugram','Hisar','Jhajjar','Jind','Kaithal','Karnal','Kurukshetra','Mahendragarh','Nuh','Palwal','Panchkula','Panipat','Rewari','Rohtak','Sirsa','Sonipat','Yamunanagar'],
+    'Punjab':['Amritsar','Barnala','Bathinda','Faridkot','Fatehgarh Sahib','Fazilka','Ferozepur','Gurdaspur','Hoshiarpur','Jalandhar','Kapurthala','Ludhiana','Malerkotla','Mansa','Moga','Pathankot','Patiala','Rupnagar','SAS Nagar (Mohali)','Sangrur','SBS Nagar','Sri Muktsar Sahib','Tarn Taran'],
+    'Rajasthan':['Ajmer','Alwar','Banswara','Baran','Barmer','Bharatpur','Bhilwara','Bikaner','Bundi','Chittorgarh','Churu','Dausa','Dholpur','Dungarpur','Hanumangarh','Jaipur','Jaisalmer','Jalore','Jhalawar','Jhunjhunu','Jodhpur','Karauli','Kota','Nagaur','Pali','Pratapgarh','Rajsamand','Sawai Madhopur','Sikar','Sirohi','Sri Ganganagar','Tonk','Udaipur'],
+    'Madhya Pradesh':['Agar Malwa','Alirajpur','Anuppur','Ashoknagar','Balaghat','Barwani','Betul','Bhind','Bhopal','Burhanpur','Chhatarpur','Chhindwara','Damoh','Datia','Dewas','Dhar','Dindori','Guna','Gwalior','Harda','Hoshangabad','Indore','Jabalpur','Jhabua','Katni','Khandwa','Khargone','Mandla','Mandsaur','Morena','Narsinghpur','Neemuch','Niwari','Panna','Raisen','Rajgarh','Ratlam','Rewa','Sagar','Satna','Sehore','Seoni','Shahdol','Shajapur','Sheopur','Shivpuri','Sidhi','Singrauli','Tikamgarh','Ujjain','Umaria','Vidisha'],
+    'Bihar':['Araria','Arwal','Aurangabad','Banka','Begusarai','Bhagalpur','Bhojpur','Buxar','Darbhanga','East Champaran','Gaya','Gopalganj','Jamui','Jehanabad','Kaimur','Katihar','Khagaria','Kishanganj','Lakhisarai','Madhepura','Madhubani','Munger','Muzaffarpur','Nalanda','Nawada','Patna','Purnia','Rohtas','Saharsa','Samastipur','Saran','Sheikhpura','Sheohar','Sitamarhi','Siwan','Supaul','Vaishali','West Champaran'],
+    'Jharkhand':['Bokaro','Chatra','Deoghar','Dhanbad','Dumka','East Singhbhum','Garhwa','Giridih','Godda','Gumla','Hazaribagh','Jamtara','Khunti','Koderma','Latehar','Lohardaga','Pakur','Palamu','Ramgarh','Ranchi','Sahibganj','Seraikela-Kharsawan','Simdega','West Singhbhum'],
+    'Maharashtra':['Ahmednagar','Akola','Amravati','Aurangabad (Chh. Sambhajinagar)','Beed','Bhandara','Buldhana','Chandrapur','Dhule','Gadchiroli','Gondia','Hingoli','Jalgaon','Jalna','Kolhapur','Latur','Mumbai City','Mumbai Suburban','Nagpur','Nanded','Nandurbar','Nashik','Osmanabad','Palghar','Parbhani','Pune','Raigad','Ratnagiri','Sangli','Satara','Sindhudurg','Solapur','Thane','Wardha','Washim','Yavatmal'],
+    'Gujarat':['Ahmedabad','Amreli','Anand','Aravalli','Banaskantha','Bharuch','Bhavnagar','Botad','Chhota Udaipur','Dahod','Dang','Devbhoomi Dwarka','Gandhinagar','Gir Somnath','Jamnagar','Junagadh','Kheda','Kutch','Mahisagar','Mehsana','Morbi','Narmada','Navsari','Panchmahal','Patan','Porbandar','Rajkot','Sabarkantha','Surat','Surendranagar','Tapi','Vadodara','Valsad'],
+    'West Bengal':['Alipurduar','Bankura','Birbhum','Cooch Behar','Dakshin Dinajpur','Darjeeling','Hooghly','Howrah','Jalpaiguri','Jhargram','Kalimpong','Kolkata','Malda','Murshidabad','Nadia','North 24 Parganas','Paschim Bardhaman','Paschim Medinipur','Purba Bardhaman','Purba Medinipur','Purulia','South 24 Parganas','Uttar Dinajpur'],
+    'Odisha':['Angul','Balangir','Balasore','Bargarh','Bhadrak','Boudh','Cuttack','Deogarh','Dhenkanal','Gajapati','Ganjam','Jagatsinghpur','Jajpur','Jharsuguda','Kalahandi','Kandhamal','Kendrapara','Kendujhar','Khordha','Koraput','Malkangiri','Mayurbhanj','Nabarangpur','Nayagarh','Nuapada','Puri','Rayagada','Sambalpur','Subarnapur','Sundargarh'],
+    'Chhattisgarh':['Balod','Baloda Bazar','Balrampur','Bastar','Bemetara','Bijapur','Bilaspur','Dantewada','Dhamtari','Durg','Gariaband','Gaurela-Pendra-Marwahi','Janjgir-Champa','Jashpur','Kabirdham','Kanker','Kondagaon','Korba','Koriya','Mahasamund','Mungeli','Narayanpur','Raigarh','Raipur','Rajnandgaon','Sukma','Surajpur','Surguja'],
+    'Andhra Pradesh':['Alluri Sitharama Raju','Anakapalli','Anantapur','Annamayya','Bapatla','Chittoor','East Godavari','Eluru','Guntur','Kakinada','Konaseema','Krishna','Kurnool','Nandyal','NTR','Palnadu','Parvathipuram Manyam','Prakasam','Sri Sathya Sai','Srikakulam','SPS Nellore','Tirupati','Visakhapatnam','Vizianagaram','West Godavari','YSR Kadapa'],
+    'Telangana':['Adilabad','Bhadradri Kothagudem','Hanumakonda','Hyderabad','Jagtial','Jangaon','Jayashankar Bhupalpally','Jogulamba Gadwal','Kamareddy','Karimnagar','Khammam','Komaram Bheem','Mahabubabad','Mahabubnagar','Mancherial','Medak','Medchal-Malkajgiri','Mulugu','Nagarkurnool','Nalgonda','Narayanpet','Nirmal','Nizamabad','Peddapalli','Rajanna Sircilla','Rangareddy','Sangareddy','Siddipet','Suryapet','Vikarabad','Wanaparthy','Warangal','Yadadri Bhuvanagiri'],
+    'Karnataka':['Bagalkot','Ballari','Belagavi','Bengaluru Rural','Bengaluru Urban','Bidar','Chamarajanagar','Chikkaballapur','Chikkamagaluru','Chitradurga','Dakshina Kannada','Davanagere','Dharwad','Gadag','Hassan','Haveri','Kalaburagi','Kodagu','Kolar','Koppal','Mandya','Mysuru','Raichur','Ramanagara','Shivamogga','Tumakuru','Udupi','Uttara Kannada','Vijayanagara','Vijayapura','Yadgir'],
+    'Tamil Nadu':['Ariyalur','Chengalpattu','Chennai','Coimbatore','Cuddalore','Dharmapuri','Dindigul','Erode','Kallakurichi','Kancheepuram','Kanyakumari','Karur','Krishnagiri','Madurai','Mayiladuthurai','Nagapattinam','Namakkal','Nilgiris','Perambalur','Pudukkottai','Ramanathapuram','Ranipet','Salem','Sivaganga','Tenkasi','Thanjavur','Theni','Thoothukudi','Tiruchirappalli','Tirunelveli','Tirupathur','Tiruppur','Tiruvallur','Tiruvannamalai','Tiruvarur','Vellore','Viluppuram','Virudhunagar'],
+    'Kerala':['Alappuzha','Ernakulam','Idukki','Kannur','Kasaragod','Kollam','Kottayam','Kozhikode','Malappuram','Palakkad','Pathanamthitta','Thiruvananthapuram','Thrissur','Wayanad'],
+    'Assam':['Baksa','Barpeta','Biswanath','Bongaigaon','Cachar','Charaideo','Chirang','Darrang','Dhemaji','Dhubri','Dibrugarh','Dima Hasao','Goalpara','Golaghat','Hailakandi','Hojai','Jorhat','Kamrup','Kamrup Metropolitan','Karbi Anglong','Karimganj','Kokrajhar','Lakhimpur','Majuli','Morigaon','Nagaon','Nalbari','Sivasagar','Sonitpur','South Salmara-Mankachar','Tinsukia','Udalguri','West Karbi Anglong'],
+    'Himachal Pradesh':['Bilaspur','Chamba','Hamirpur','Kangra','Kinnaur','Kullu','Lahaul & Spiti','Mandi','Shimla','Sirmaur','Solan','Una'],
+    'Jammu & Kashmir':['Anantnag','Bandipora','Baramulla','Budgam','Doda','Ganderbal','Jammu','Kathua','Kishtwar','Kulgam','Kupwara','Poonch','Pulwama','Rajouri','Ramban','Reasi','Samba','Shopian','Srinagar','Udhampur'],
+    'Goa':['North Goa','South Goa'],
+    'Arunachal Pradesh':['Anjaw','Changlang','East Kameng','East Siang','Itanagar Capital','Kamle','Kra Daadi','Kurung Kumey','Lepa Rada','Lohit','Longding','Lower Dibang Valley','Lower Siang','Lower Subansiri','Namsai','Pakke-Kessang','Papum Pare','Shi-Yomi','Siang','Tawang','Tirap','Upper Dibang Valley','Upper Siang','Upper Subansiri','West Kameng','West Siang'],
+    'Manipur':['Bishnupur','Chandel','Churachandpur','Imphal East','Imphal West','Jiribam','Kakching','Kamjong','Kangpokpi','Noney','Pherzawl','Senapati','Tamenglong','Tengnoupal','Thoubal','Ukhrul'],
+    'Meghalaya':['East Garo Hills','East Jaintia Hills','East Khasi Hills','North Garo Hills','Ri-Bhoi','South Garo Hills','South West Garo Hills','South West Khasi Hills','West Garo Hills','West Jaintia Hills','West Khasi Hills'],
+    'Mizoram':['Aizawl','Champhai','Hnahthial','Khawzawl','Kolasib','Lawngtlai','Lunglei','Mamit','Saiha','Saitual','Serchhip'],
+    'Nagaland':['Chumoukedima','Dimapur','Kiphire','Kohima','Longleng','Mokokchung','Mon','Niuland','Noklak','Peren','Phek','Tseminyu','Tuensang','Wokha','Zunheboto'],
+    'Sikkim':['Gangtok','Gyalshing','Mangan','Namchi','Pakyong','Soreng'],
+    'Tripura':['Dhalai','Gomati','Khowai','North Tripura','Sepahijala','South Tripura','Unakoti','West Tripura'],
+    'Other':['Other']
+  };
+  var STATES = Object.keys(DISTRICTS).filter(function(s){ return s !== 'Other'; }).sort();
+  STATES.unshift('Uttar Pradesh');                       // UP sabse upar
+  STATES = STATES.filter(function(s,i){ return STATES.indexOf(s) === i; });
+  STATES.push('Other');
+
+  function fillDistricts(state){
+    var d = document.getElementById('district');
+    d.innerHTML = '<option value="">Select district</option>';
+    (DISTRICTS[state] || []).concat(state && state !== 'Other' ? ['Other'] : []).forEach(function(x){
+      var o = document.createElement('option'); o.textContent = x; d.appendChild(o);
+    });
+  }
+  (function fillDrops(){
+    var s = document.getElementById('state');
+    STATES.forEach(function(x){ var o=document.createElement('option'); o.textContent=x; s.appendChild(o); });
+    s.value = 'Uttar Pradesh';
+    fillDistricts('Uttar Pradesh');
+    s.addEventListener('change', function(){ fillDistricts(s.value); updateAll(); });
+  })();
+
+  function v(id){ return document.getElementById(id).value.trim(); }
+  function markBad(el){ el.classList.add('bad'); }
+  function clearBad(el){ if(el) el.classList.remove('bad'); }
+  ['name','father','dob','gender','mobile','aadhaar','house','city','district','state','pin',
+   'gradYear','degree','university','addrType','gradType'].forEach(function(id){
+    var el = document.getElementById(id);
+    el.addEventListener('input', function(){ clearBad(this.closest('.field')); updateAll(); });
+    el.addEventListener('change', updateAll);
+  });
+  document.getElementById('declare').addEventListener('change', function(){ clearBad(this.closest('.field')); updateAll(); });
+
+  function ageOK(){
+    if (!v('dob')) return false;
+    var a = (new Date() - new Date(v('dob'))) / (365.25*24*3600*1000);
+    return a >= 18 && a <= 100;
+  }
+
+  function ready(){
+    var yr = parseInt(v('gradYear'),10);
+    return {
+      p1: !!(v('name') && v('father') && ageOK() && v('gender') &&
+             /^[6-9]\d{9}$/.test(v('mobile')) && /^[2-9]\d{11}$/.test(v('aadhaar')) &&
+             v('house') && v('city') && v('district') && v('state') && /^[1-9]\d{5}$/.test(v('pin'))),
+      p2: !!(files.addr && v('addrType')),
+      p3: !!(files.grad && yr>=1950 && yr<=2022 && v('degree') && v('university') && v('gradType')),
+      p4: !!files.photo,
+      dec: document.getElementById('declare').checked
+    };
+  }
+
+  function updateAll(){
+    var s = ready();
+    document.querySelectorAll('#rail .pill').forEach(function(p){
+      p.classList.toggle('on', !!s[p.getAttribute('data-k')]);
+    });
+    var all = s.p1 && s.p2 && s.p3 && s.p4 && s.dec;
+    var btn = document.getElementById('btnSubmit');
+    btn.disabled = !all;
+    btn.textContent = all ? 'Submit registration' : 'Complete all steps to submit';
+  }
+  updateAll();
+
+  document.getElementById('regForm').addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var s = ready();
+    if (!(s.p1 && s.p2 && s.p3 && s.p4 && s.dec)) return; // button disabled anyway
+
+    var btn = document.getElementById('btnSubmit');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spin"></span>Checking documents &amp; submitting…';
+    document.getElementById('serverErr').style.display = 'none';
+
+    /* ===== APPS SCRIPT API URL — apna /exec link yahan paste karo ===== */
+    var API_URL = 'PASTE_YOUR_APPS_SCRIPT_EXEC_URL_HERE';
+
+    fetch(API_URL, {
+      method: 'POST',
+      // text/plain rakha hai taaki browser CORS preflight na bheje (Apps Script ke liye zaroori)
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        name: v('name'), father: v('father'), dob: v('dob'), gender: v('gender'),
+        mobile: v('mobile'), aadhaar: v('aadhaar'),
+        house: v('house'), city: v('city'), district: v('district'), state: v('state'), pin: v('pin'),
+        addrType: v('addrType'), gradYear: v('gradYear'), gradType: v('gradType'),
+        degree: v('degree'), university: v('university'),
+        addrFile: files.addr, gradFile: files.grad, photoFile: files.photo
+      })
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(res){
+      if (res && res.ok){
+        document.getElementById('regForm').style.display = 'none';
+        document.getElementById('successCard').style.display = 'block';
+        if (res.refNo) document.getElementById('refNo').textContent = res.refNo;
+        window.scrollTo({top:0, behavior:'smooth'});
+      } else showErr(res && res.error ? res.error : 'Something went wrong. Please try again.');
+    })
+    .catch(function(err){ showErr('Network error. Please check your internet and try again.'); });
+
+    function showErr(m){
+      var a = document.getElementById('serverErr');
+      a.textContent = m; a.style.display = 'block';
+      btn.disabled = false; btn.textContent = 'Submit registration';
+      a.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+  });
+</script>
+</body>
+</html>
